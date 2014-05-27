@@ -3,6 +3,7 @@ let g = 20.0
 let p = 3.0
 let inteval = 200.0
 let size = 20
+let canvas_h = 400.0
 
 module Html = Dom_html
 let _ = Random.self_init ()
@@ -26,7 +27,7 @@ let create_node i v =
      origin = 
      {
        x = (float_of_int i) *. (w +. g);
-       y = 490. -. (float_of_int v) *. p
+       y = canvas_h -. 10. -. (float_of_int v) *. p
      };
      width = w; 
      height = (float_of_int v) *. p
@@ -37,8 +38,8 @@ let create_node i v =
 let create_canvas () =
   let d = Html.window##document in
   let c = Html.createCanvas d in
-  c##width <- 1000;
-  c##height <- 500;
+  c##width <- 800;
+  c##height <- 400;
   c
 
 let list = create_list size
@@ -48,7 +49,7 @@ let ctx = canvas##getContext (Html._2d_)
 
 let update_node node v = 
   node.value <- v;
-  node.area.origin.y <- 490. -. (float_of_int v) *. p;
+  node.area.origin.y <- canvas_h -. 10. -. (float_of_int v) *. p;
   node.area.height <- (float_of_int v) *. p
 
 let set_sorted node =
@@ -70,16 +71,16 @@ let add_step steps step =
 let draw_node {value; area} = 
   ctx##fillStyle <- Js.string "gray";
   ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-  ctx##fillText (value, area.origin.x +. 3., 500.)
+  ctx##fillText (value, area.origin.x +. 3., canvas_h)
 
 let step_restore node_list i = 
   let {value;area;sorted} = node_list.(i) in
   let run _ =
-    ctx##clearRect (area.origin.x, area.origin.y, area.width, 500);
+    ctx##clearRect (area.origin.x, area.origin.y, area.width, canvas_h);
     if sorted then ctx##fillStyle <- Js.string "black"
     else  ctx##fillStyle <- Js.string "gray";
     ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-    ctx##fillText (value, area.origin.x +. 3., 500.);
+    ctx##fillText (value, area.origin.x +. 3., canvas_h);
     () in
   run
 
@@ -131,11 +132,11 @@ let step_flag node_list i =
 let redraw_node node_list i ?(highlight=true) = 
   let node = node_list.(i) in
   let {value;area} = node in
-  ctx##clearRect (area.origin.x, 0., area.width, 500.0);
+  ctx##clearRect (area.origin.x, 0., area.width, canvas_h);
 
   if highlight then ctx##fillStyle <- Js.string "yellow";
   ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-  ctx##fillText (value, area.origin.x +. 3., 500.)
+  ctx##fillText (value, area.origin.x +. 3., canvas_h)
 
 let step_swap node_list i j ?(highlight=true) =
   let run _ =

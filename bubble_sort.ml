@@ -21,7 +21,10 @@ let bubble_sort node_list =
 
 
 let start _ =
-  Dom.appendChild Html.window##document##body canvas;
+  let canvas_elem =
+    Js.Opt.get (Html.document##getElementById(Js.string "canvas"))
+      (fun () -> assert false) in
+  Dom.appendChild canvas_elem canvas;
   Array.iter (fun n -> (draw_node n)) nodes;
   
    (* Html.window##alert (Js.string (to_string nodes)); *)
