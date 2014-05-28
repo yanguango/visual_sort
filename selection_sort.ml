@@ -6,9 +6,7 @@ let selection_sort node_list =
   let length = Array.length node_list in
   for i = 0 to length - 1 do
     let min = ref i in
-
-    add_step steps (step_flag node_list i); (* flag original min *)
-
+    add_step steps (step_flag node_list i);
     for j = i + 1 to length - 1 do
       add_step steps (step_compare node_list j);
 
@@ -26,8 +24,6 @@ let selection_sort node_list =
       add_step steps (step_restore node_list !min);
     add_step steps (step_flag_sorted node_list i)
   done
-   (* Html.window##alert (Js.string (to_string nodes)) *)
-
 
 let start _ =
   let canvas_elem =
@@ -35,14 +31,10 @@ let start _ =
       (fun () -> assert false) in
   Dom.appendChild canvas_elem canvas;
   Array.iter (fun n -> (draw_node n)) nodes;
-  
-   (* Html.window##alert (Js.string (to_string nodes)); *)
 
   selection_sort nodes;
   rebuild_nodes nodes;
   
-  (* Html.window##alert (Js.string (to_string nodes)); *)
-
   Html.window##alert (Js.string (string_of_int (List.length !steps)));
   run_steps !steps;
   Js._false
