@@ -17,7 +17,9 @@ let to_string nodes =
    Array.iter (fun n -> result := !result ^ (string_of_int n.value) ^ ", ") nodes;
    !result
 
-   
+let less n1 n2 =
+  n1.value < n2.value
+  
 let create_list n =
   Array.init n (fun _ -> (Random.int 99) + 1)
 
