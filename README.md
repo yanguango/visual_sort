@@ -2,10 +2,6 @@
 
 AVCaml is a website to visualize algorithm, which is built on OCaml and Js_of_caml. It's just my exercise when I learned OCaml and functional programming.
 
-#Demo
-
-You can visit http://avcaml.yanguango.com .
-
 #Requirements
 + OCaml
 + JS_of_ocaml
