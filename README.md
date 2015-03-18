@@ -1,6 +1,6 @@
-#AVCaml
+#VisualSort
 
-AVCaml is a website to visualize algorithm, which is built on OCaml and Js_of_caml. It's just my exercise when I learned OCaml and functional programming.
+VisualSort is a simple sorting visualization, which is built on OCaml and Js_of_caml. It's just my exercise when I learned OCaml and functional programming.
 
 #Requirements
 + OCaml
@@ -22,4 +22,4 @@ bash build_all.sh
 ```
 
 ## Demo
-http://yanguango.com/avcaml/
+http://yanguango.com/visual_sort/

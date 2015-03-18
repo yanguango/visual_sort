@@ -24,17 +24,17 @@ let create_list n =
   Array.init n (fun _ -> (Random.int 99) + 1)
 
 let create_node i v = 
-  {value = v; 
-   area = {
-     origin = 
-     {
-       x = (float_of_int i) *. (w +. g);
-       y = canvas_h -. 10. -. (float_of_int v) *. p
-     };
-     width = w; 
-     height = (float_of_int v) *. p
-   };
-   sorted = false           
+  {
+    value = v; 
+    area = {
+      origin = {
+        x = (float_of_int i) *. (w +. g);
+        y = canvas_h -. 10. -. (float_of_int v) *. p
+      };
+      width = w; 
+      height = (float_of_int v) *. p
+    };
+    sorted = false           
   }
 
 let create_canvas () =
@@ -73,22 +73,22 @@ let add_step steps step =
 let draw_node {value; area} = 
   ctx##fillStyle <- Js.string "gray";
   ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-  ctx##fillText (value, area.origin.x +. 3., canvas_h)
+  ctx##fillText (Js.string (string_of_int value), area.origin.x +. 3., canvas_h)
 
 let step_restore node_list i = 
-  let {value;area;sorted} = node_list.(i) in
-  let run _ =
+  let {value; area; sorted} = node_list.(i) in
+  let run () =
     ctx##clearRect (area.origin.x, area.origin.y, area.width, canvas_h);
     if sorted then ctx##fillStyle <- Js.string "black"
-    else  ctx##fillStyle <- Js.string "gray";
+    else ctx##fillStyle <- Js.string "gray";
     ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-    ctx##fillText (value, area.origin.x +. 3., canvas_h);
+    ctx##fillText (Js.string (string_of_int value), area.origin.x +. 3., canvas_h);
     () in
   run
 
 let step_flag_sorted node_list i = 
   let {value;area} = node_list.(i) in
-  let run _ =
+  let run () =
     set_sorted node_list.(i);
     ctx##fillStyle <- Js.string "black";
     ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
@@ -96,36 +96,36 @@ let step_flag_sorted node_list i =
   run
 
 let step_set_sorted node_list i =
-  let run _ =
+  let run () =
    set_sorted node_list.(i);
    () in
   run
 
 let step_compare node_list i =
   let {value;area} = node_list.(i) in
-  let run _ = 
+  let run () = 
     ctx##fillStyle <- Js.string "green";
     ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-    Html.window##setTimeout ((step_restore node_list i),  inteval);
+    Html.window##setTimeout (Js.wrap_callback (step_restore node_list i),  inteval); 
     () in
   run
 
 let step_compare_two node_list i j = 
-  let run _ = 
+  let run () = 
     ctx##fillStyle <- Js.string "green";
     let {value;area} = node_list.(i) in
     ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-    Html.window##setTimeout ((step_restore node_list i),  inteval);
+    Html.window##setTimeout (Js.wrap_callback (step_restore node_list i),  inteval); 
     let {value;area} = node_list.(j) in
     ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-    Html.window##setTimeout ((step_restore node_list i),  inteval);
+    Html.window##setTimeout (Js.wrap_callback (step_restore node_list j),  inteval); 
     () in
   run
 
 
 let step_flag node_list i =
   let {value;area} = node_list.(i) in
-  let run _ = 
+  let run () = 
     ctx##fillStyle <- Js.string "red";
     ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
     () in
@@ -136,18 +136,18 @@ let redraw_node node_list i ?(highlight=true) =
   let {value;area} = node in
   ctx##clearRect (area.origin.x, 0., area.width, canvas_h);
 
-  if highlight then ctx##fillStyle <- Js.string "yellow";
+  ctx##fillStyle <- if highlight then Js.string "yellow" else Js.string "gray";
   ctx##fillRect (area.origin.x, area.origin.y, area.width, area.height);
-  ctx##fillText (value, area.origin.x +. 3., canvas_h)
+  ctx##fillText (Js.string (string_of_int value), area.origin.x +. 3., canvas_h)
 
 let step_swap node_list i j ?(highlight=true) =
-  let run _ =
+  let run () =
     swap node_list i j;
     redraw_node node_list i ~highlight:highlight;
     redraw_node node_list j ~highlight:highlight;
     if highlight then begin
-      Html.window##setTimeout ((step_restore node_list i), inteval);
-      Html.window##setTimeout ((step_restore node_list j), inteval);
+      Html.window##setTimeout (Js.wrap_callback (step_restore node_list i),  inteval); 
+      Html.window##setTimeout (Js.wrap_callback (step_restore node_list j),  inteval); 
       ()
     end;
     () in
@@ -157,5 +157,5 @@ let rec run_steps = function
   | [] -> ()
   | h::tl -> 
     h ();
-    Html.window##setTimeout ((fun _ -> (run_steps tl)), inteval);
+    Html.window##setTimeout (Js.wrap_callback (fun () -> (run_steps tl)), inteval);
   ()

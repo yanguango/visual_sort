@@ -1,4 +1,4 @@
-open Yg_sort
+open Visual_sort
 
 let steps = ref []
 
@@ -35,7 +35,7 @@ let start _ =
   selection_sort nodes;
   rebuild_nodes nodes;
   
-  Html.window##alert (Js.string (string_of_int (List.length !steps)));
+  Html.window##alert (Js.string "Let's start!");
   run_steps !steps;
   Js._false
 
