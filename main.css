@@ -59,6 +59,10 @@ body {
   margin-top: 28px;
 }
 
+ul.sorting li {
+  font-size: 18px;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 800px) {
   /* Remove the padding we set earlier */
